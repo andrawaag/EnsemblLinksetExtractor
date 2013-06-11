@@ -149,7 +149,7 @@ public class getLinkset {
 				"	}"; 
 	    Query query = QueryFactory.create(constructQueryString);
 		QueryExecution queryExecution = QueryExecutionFactory.create(query, ensemblModel);
-		Model resultSetModel = queryExecution.execConstruct(ensemblModel);
+		Model resultSetModel = queryExecution.execConstruct();
 		
 
 		FileOutputStream fout;
