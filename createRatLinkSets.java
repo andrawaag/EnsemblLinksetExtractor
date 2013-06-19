@@ -23,26 +23,21 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 
 public class createRatLinkSets {
-
 	/**
 	 * @param args
 	 * @throws FileNotFoundException 
 	 * @throws UnsupportedEncodingException 
 	 */
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
-
 		String dataResourceQuery = "SELECT DISTINCT *" + 
 		"FROM <http://rattus_norvegicus_core_71_5.ensembl.org>" + 
 		"WHERE { " + 
 		"      {?s <http://hasDbName> ?dbName} ." +
 		"}";
-
 		Query dataSourceQuery = QueryFactory.create(dataResourceQuery);
 		QueryExecution dataSourceQueryExecution = QueryExecutionFactory.sparqlService("http://localhost:2001/sparql", dataSourceQuery);
-
 		//QueryExecution dataSourceQueryExecution = QueryExecutionFactory.sparqlService("http://ops.few.vu.nl:8890/sparql", dataSourceQuery);
 		ResultSet dataResultSet = dataSourceQueryExecution.execSelect();
-
 		while (dataResultSet.hasNext()) {
 			Model ratLinkSetMode = ModelFactory.createDefaultModel();
 			QuerySolution dataSolution = dataResultSet.next();
@@ -118,7 +113,39 @@ public class createRatLinkSets {
 			identifiersOrg.put("http://dbName#RFAM", "http://identifiers.org/rfam/");
 			identifiersOrg.put("http://dbName#Orphanet", "http://identifiers.org/orphanet/");
 			identifiersOrg.put("http://dbName#MIM_MORBID", "http://identifiers.org/omim/");
-			identifiersOrg.put("http://dbName#Clone_based_vega_gene", "http://identifiers.org/vega/"); // TODO CHECK!!!!!!
+			identifiersOrg.put("http://dbName#Clone_based_vega_gene", "http://identifiers.org/vega/"); // TODO CHECK!!!!!!	
+			identifiersOrg.put("http://dbName#OTTG", "http://identifiers.org/ensembl/");
+			identifiersOrg.put("http://dbName#LRG", "http://identifiers.org/lrg/");
+			identifiersOrg.put("http://dbName#ENS_LRG_gene", "http://identifiers.org/lrg/"); 
+			identifiersOrg.put("http://dbName#HGNC", "http://identifiers.org/hgnc/");
+			identifiersOrg.put("http://dbName#WikiGene", "http://identifiers.org/wikigene/");
+			identifiersOrg.put("http://dbName#EntrezGene", "http://identifiers.org/ncbigene/");
+			identifiersOrg.put("http://dbName#UniGene", "http://identifiers.org/unigene/");
+			identifiersOrg.put("http://dbName#MIM_GENE", "http://identifiers.org/mim/");
+			identifiersOrg.put("http://dbName#Uniprot_genename", "http://identifiers.org/uniprot/");
+			identifiersOrg.put("http://dbName#IPI", "http://identifiers.org/ipi/");
+			identifiersOrg.put("http://dbName#EMBL","http://identifiers.org/embl");
+			identifiersOrg.put("http://dbName#protein_id", "http://identifiers.org/");
+			identifiersOrg.put("http://dbName#Uniprot/SWISSPROT", "http://identifiers.org/uniprot/");
+			identifiersOrg.put("http://dbName#Clone_based_ensembl_gene", "http://identifiers.org/ensembl/");
+			identifiersOrg.put("http://dbName#PDB", "http://identifiers.org/pdb/");
+			identifiersOrg.put("http://dbName#RefSeq_peptide", "http://identifiers.org/refseq/");
+			identifiersOrg.put("http://dbName#EntrezGene", "http://identifiers.org/ncbigene/");
+			identifiersOrg.put("http://dbName#Uniprot/SPTREMBL", "http://identifiers.org/uniprot/");
+			identifiersOrg.put("http://dbName#MEROPS", "http://identifiers.org/merops/");
+			identifiersOrg.put("http://dbName#GO", "http://identifiers.org/go/");
+			identifiersOrg.put("http://dbName#goslim_goa", "http://identifiers.org/goa/");
+			identifiersOrg.put("http://dbName#RefSeq_mRNA_predicted", "http://identifiers.org/refseq/");
+			identifiersOrg.put("http://dbName#ArrayExpress", "http://identifiers.org/arrayexpress/");
+			identifiersOrg.put("http://dbName#RefSeq_mRNA", "http://identifiers.org/refseq/");
+			identifiersOrg.put("http://dbName#MGI", "http://identifiers.org/mgi/");
+			identifiersOrg.put("http://dbName#MGI_transcript_name", "http://identifiers.org/mgi/");
+			identifiersOrg.put("http://dbName#RefSeq_ncRNA_predicted", "http://identifiers.org/refseq/");
+			identifiersOrg.put("http://dbName#RefSeq_ncRNA", "http://identifiers.org/refseq/");
+			identifiersOrg.put("http://dbName#miRBase", "http://identifiers.org/mirbase/");
+			identifiersOrg.put("http://dbName#RFAM", "http://identifiers.org/rfam/");
+			identifiersOrg.put("http://dbName#ArrayExpress", "http://identifiers.org/arrayexpress/");
+			
 			boolean write = false;
 			while (resultSet.hasNext()) {
 				write = true;
