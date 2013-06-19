@@ -14,6 +14,7 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
@@ -48,6 +49,7 @@ public class createRatLinkSets {
 			String dataSource = dataSolution.get("dbName").toString();	
 
 			Model voidDescriptionModel = ModelFactory.createDefaultModel();
+			Property dulExpresses = voidDescriptionModel.createProperty("http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#expresses");
 			Resource createByResource = voidDescriptionModel.createResource("http://orcid.org/0000-0001-9773-4008");
 			Resource voidHeaderResource = voidDescriptionModel.createResource();
 			voidHeaderResource.addProperty(RDF.type, Void.DatasetDescription);
@@ -67,7 +69,11 @@ public class createRatLinkSets {
 			linksetResource.addProperty(Pav.createdOn, nowLiteral);
 			linksetResource.addProperty(Pav.retrievedFrom, voidDescriptionModel.createResource("ftp://ftp.ensembl.org/pub/release-71/mysql/"));
 			linksetResource.addProperty(Pav.retrievedBy, createByResource);
-			
+			linksetResource.addProperty(Pav.createdWith, voidDescriptionModel.createResource("https://raw.github.com/andrawaag/EnsemblLinksetExtractor/master/createRatLinkSets.java"));
+			linksetResource.addProperty(dulExpresses, voidDescriptionModel.createResource("http://dbpedia.org/page/Ensembl"));
+			linksetResource.addLiteral(Pav.version, "71_5");
+			linksetResource.addProperty(Void.subjectsTarget, voidDescriptionModel.createResource("http://identifiers.org/ensembl"));
+			linksetResource.addProperty(Void.objectsTarget, voidDescriptionModel.createResource("http://identifiers.org/"+URLEncoder.encode(dataSource.split("#")[1], "UTF-8")));
 			String getQuery = "SELECT DISTINCT *" + 
 			"FROM <http://rattus_norvegicus_core_71_5.ensembl.org>" + 
 			"WHERE { " + 
@@ -129,6 +135,7 @@ public class createRatLinkSets {
 				ensemblResource.addProperty(Skos.exactMatch, externalIdentifierResource);
 			}
 			if (write) {
+				linksetResource.addLiteral(Void.triples, ratLinkSetMode.size());
 				FileOutputStream fout2;
 				fout2 = new FileOutputStream("/tmp/RN_ensembl_"+URLEncoder.encode(dataSource.split("#")[1]+"LinkSets.ttl", "UTF-8"));
 				ratLinkSetMode.write(fout2, "TURTLE");
