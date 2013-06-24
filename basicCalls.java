@@ -71,37 +71,39 @@ public class basicCalls {
 		linksetResource.addLiteral(Pav.version, species.split("_")[3]+"_"+species.split("_")[4]);
 		linksetResource.addProperty(Void.subjectsTarget, model.createResource("http://identifiers.org/ensembl"));
 		linksetResource.addProperty(Void.objectsTarget, model.createResource("http://identifiers.org/"+URLEncoder.encode(dataSource.split("#")[1], "UTF-8")));
-		
+
 	}
-	
+
 	public static Model getEnsemblLinkSets(String species, String dataSource){
-		String getQuery = "SELECT DISTINCT * " + 
-		"FROM <http://"+species+".ensembl.org> " + 
-		"WHERE { " + 
-		"     ?xref ?p <http://"+species+".ensembl.org/xref> ." + 
-		"     ?xref <http://hasDbprimary_acc> ?dbPrimaryAcc . " + 
-		"     ?xref <http://hasDisplayLabel> ?dbDisplayLabel . " + 
-		"     ?xref <http://hasExternalDbId> ?externalDbId .  " + 
-		"     ?xref <http://hasInternalEnsemblId> ?internalEnsemblId . " + 
-		"     ?externalDbId <http://hasDbName> <"+ dataSource + "> . " + 
-		"     ?internalEnsemblId <http://hasExternalEnsemblId> ?externalEnsemblId ." +  
-		"} ";
-		Query query1 = QueryFactory.create(getQuery);
-		QueryExecution queryExecution = QueryExecutionFactory.sparqlService("http://localhost:2001/sparql", query1);
-		// QueryExecution queryExecution = QueryExecutionFactory.sparqlService("http://ops.few.vu.nl:8890/sparql", query);
 		Model humanLinkSetModel = ModelFactory.createDefaultModel();
-		ResultSet resultSet = queryExecution.execSelect();		
-		while (resultSet.hasNext()) {
-			QuerySolution solution = resultSet.next();
-			String externalEnsembl = solution.get("externalEnsemblId").toString();
-			System.out.println(externalEnsembl);
-			String primaryAcc = solution.get("dbPrimaryAcc").toString();
-			//System.out.println(externalEnsembl);
-			Resource ensemblResource = humanLinkSetModel.createResource("http://identifiers.org/ensembl/"+externalEnsembl.split("#")[1]);
-			System.out.println(ensemblResource.getURI().toString());
-			Resource externalIdentifierResource = humanLinkSetModel.createResource(identifiersOrg.get(dataSource)+primaryAcc.split("#")[1]);
-			System.out.println(externalIdentifierResource.getURI().toString());
-			ensemblResource.addProperty(Skos.exactMatch, externalIdentifierResource);
+		if (identifiersOrg.get(dataSource) != null) {
+			String getQuery = "SELECT DISTINCT * " + 
+			"FROM <http://"+species+".ensembl.org> " + 
+			"WHERE { " + 
+			"     ?xref ?p <http://"+species+".ensembl.org/xref> ." + 
+			"     ?xref <http://hasDbprimary_acc> ?dbPrimaryAcc . " + 
+			"     ?xref <http://hasDisplayLabel> ?dbDisplayLabel . " + 
+			"     ?xref <http://hasExternalDbId> ?externalDbId .  " + 
+			"     ?xref <http://hasInternalEnsemblId> ?internalEnsemblId . " + 
+			"     ?externalDbId <http://hasDbName> <"+ dataSource + "> . " + 
+			"     ?internalEnsemblId <http://hasExternalEnsemblId> ?externalEnsemblId ." +  
+			"} ";
+			Query query1 = QueryFactory.create(getQuery);
+			QueryExecution queryExecution = QueryExecutionFactory.sparqlService("http://localhost:2001/sparql", query1);
+			// QueryExecution queryExecution = QueryExecutionFactory.sparqlService("http://ops.few.vu.nl:8890/sparql", query);
+			ResultSet resultSet = queryExecution.execSelect();		
+			while (resultSet.hasNext()) {
+				QuerySolution solution = resultSet.next();
+				String externalEnsembl = solution.get("externalEnsemblId").toString();
+				// System.out.println(externalEnsembl);
+				String primaryAcc = solution.get("dbPrimaryAcc").toString();
+				//System.out.println(externalEnsembl);
+				Resource ensemblResource = humanLinkSetModel.createResource("http://identifiers.org/ensembl/"+externalEnsembl.split("#")[1]);
+				// System.out.println(ensemblResource.getURI().toString());
+				Resource externalIdentifierResource = humanLinkSetModel.createResource(identifiersOrg.get(dataSource)+primaryAcc.split("#")[1]);
+				//System.out.println(externalIdentifierResource.getURI().toString());
+				ensemblResource.addProperty(Skos.exactMatch, externalIdentifierResource);
+			}
 		}
 		return humanLinkSetModel;	
 	}
@@ -180,6 +182,66 @@ public class basicCalls {
 		identifiersOrg.put("http://dbName#miRBase", "http://identifiers.org/mirbase/");
 		identifiersOrg.put("http://dbName#RFAM", "http://identifiers.org/rfam/");
 		identifiersOrg.put("http://dbName#ArrayExpress", "http://identifiers.org/arrayexpress/");
+		identifiersOrg.put("http://dbName#BioGRID", "http://identifiers.org/biogrid/");
+		identifiersOrg.put("http://dbName#GO", "http://identifiers.org/go/");
+		identifiersOrg.put("http://dbName#HGNC", "http://identifiers.org/hgnc/");
+		identifiersOrg.put("http://dbName#Interpro", "http://identifiers.org/interpro/");
+		identifiersOrg.put("http://dbName#MGI", "http://identifiers.org/mgd/");
+		identifiersOrg.put("http://dbName#MIM", "http://identifiers.org/omim/");
+		identifiersOrg.put("http://dbName#PDB", "http://identifiers.org/pdb/");
+		identifiersOrg.put("http://dbName#Superfamily", "http://identifiers.org/supfam/");
+		identifiersOrg.put("http://dbName#GeneDB", "http://identifiers.org/genedb/");
+		identifiersOrg.put("http://dbName#RGD", "http://identifiers.org/rgd/");
+		identifiersOrg.put("http://dbName#SGD", "http://identifiers.org/sgd/");
+		identifiersOrg.put("http://dbName#IPI", "http://identifiers.org/ipi/");
+		identifiersOrg.put("http://dbName#CCDS", "http://identifiers.org/ccds/");
+		identifiersOrg.put("http://dbName#PUBMED", "http://identifiers.org/pubmed/");
+		identifiersOrg.put("http://dbName#UniGene", "http://identifiers.org/unigene/");
+		identifiersOrg.put("http://dbName#RFAM", "http://identifiers.org/rfam/");
+		identifiersOrg.put("http://dbName#EPD", "http://identifiers.org/epd/");
+		identifiersOrg.put("http://dbName#MEROPS", "http://identifiers.org/merops/");
+		identifiersOrg.put("http://dbName#HPA", "http://identifiers.org/hpa/");
+		identifiersOrg.put("http://dbName#UniParc", "http://identifiers.org/uniparc/");
+		identifiersOrg.put("http://dbName#BRENDA", "http://identifiers.org/brenda/");
+		identifiersOrg.put("http://dbName#BioCyc", "http://identifiers.org/biocyc/");
+		identifiersOrg.put("http://dbName#EchoBASE", "http://identifiers.org/echobase/");
+		identifiersOrg.put("http://dbName#EcoGene", "http://identifiers.org/ecogene/");
+		identifiersOrg.put("http://dbName#Leproma", "http://identifiers.org/myco.lepra/");
+		identifiersOrg.put("http://dbName#TubercuList", "http://identifiers.org/myco.tuber/");
+		identifiersOrg.put("http://dbName#ArrayExpress", "http://identifiers.org/arrayexpress/");
+		identifiersOrg.put("http://dbName#DIP", "http://identifiers.org/dip/");
+		identifiersOrg.put("http://dbName#DisProt", "http://identifiers.org/disprot/");
+		identifiersOrg.put("http://dbName#DrugBank", "http://identifiers.org/drugbank/");
+		identifiersOrg.put("http://dbName#HAMAP", "http://identifiers.org/hamap/");
+		identifiersOrg.put("http://dbName#HOGENOM", "http://identifiers.org/hogenom/");
+		identifiersOrg.put("http://dbName#HSSP", "http://identifiers.org/hssp/");
+		identifiersOrg.put("http://dbName#IntAct", "http://identifiers.org/intact/");
+		identifiersOrg.put("http://dbName#PeroxiBase", "http://identifiers.org/peroxibase/");
+		identifiersOrg.put("http://dbName#REBASE", "http://identifiers.org/rebase/");
+		identifiersOrg.put("http://dbName#Reactome", "http://identifiers.org/reactome/");
+		identifiersOrg.put("http://dbName#PGD", "http://identifiers.org/pseudomonas/");
+		identifiersOrg.put("http://dbName#PomBase", "http://identifiers.org/pombase/");
+		identifiersOrg.put("http://dbName#CGD", "http://identifiers.org/cgd/");
+		identifiersOrg.put("http://dbName#ProSite", "http://identifiers.org/prosite/");
+		identifiersOrg.put("http://dbName#SMART", "http://identifiers.org/smart/");
+		identifiersOrg.put("http://dbName#MOD", "http://identifiers.org/obo.psi-mod/");
+		identifiersOrg.put("http://dbName#AGD", "http://identifiers.org/agd/");
+		identifiersOrg.put("http://dbName#PO", "http://identifiers.org/obo.po/");
+		identifiersOrg.put("http://dbName#LRG", "http://identifiers.org/lrg/");
+		identifiersOrg.put("http://dbName#PFAM", "http://identifiers.org/pfam/");
+		identifiersOrg.put("http://dbName#PFAM", "http://identifiers.org/pfam/");
+		identifiersOrg.put("http://dbName#PFAM", "http://identifiers.org/pfam/");
+		identifiersOrg.put("http://dbName#PFAM", "http://identifiers.org/pfam/");
+		identifiersOrg.put("http://dbName#PFAM", "http://identifiers.org/pfam/");
+		identifiersOrg.put("http://dbName#PFAM", "http://identifiers.org/pfam/");
+		identifiersOrg.put("http://dbName#ToxoDB", "http://identifiers.org/toxoplasma/");
+		identifiersOrg.put("http://dbName#Orphanet", "http://identifiers.org/orphanet/");
+		identifiersOrg.put("http://dbName#SO", "http://identifiers.org/obo.so/");
+		identifiersOrg.put("http://dbName#SGN", "http://identifiers.org/sgn/");
+		identifiersOrg.put("http://dbName#INSDC", "http://identifiers.org/insdc/");
+		identifiersOrg.put("http://dbName#GOA", "http://identifiers.org/goa/");
+		identifiersOrg.put("http://dbName#Rhea", "http://identifiers.org/rhea/");
+
 		return identifiersOrg;
 	}
 

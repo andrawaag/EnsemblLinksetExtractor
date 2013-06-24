@@ -30,6 +30,7 @@ public class createLinkSets {
 	 * @throws UnsupportedEncodingException 
 	 */
 	public static void justDoIt(String species) throws UnsupportedEncodingException, FileNotFoundException{
+		System.out.println(species);
 		ResultSet humanDataSourceResultSet = basicCalls.getExternalLinkedDataSources(species);	 
 		while (humanDataSourceResultSet.hasNext()) {		
 			QuerySolution dataSolution = humanDataSourceResultSet.next();
@@ -40,11 +41,11 @@ public class createLinkSets {
 			if (linkSetModel.size()>0) {
 				//linksetResource.addLiteral(Void.triples, humanLinkSetMode.size());
 				FileOutputStream fout2;
-				fout2 = new FileOutputStream("/tmp/HS_ensembl_"+URLEncoder.encode(dataSource.split("#")[1]+"LinkSets.ttl", "UTF-8"));
+				fout2 = new FileOutputStream("/tmp/"+species+"_ensembl_"+URLEncoder.encode(dataSource.split("#")[1]+"LinkSets.ttl", "UTF-8"));
 				linkSetModel.write(fout2, "TURTLE");
 
 				FileOutputStream fout3;
-				fout3 = new FileOutputStream("/tmp/Void_HS_ensembl_"+URLEncoder.encode(dataSource.split("#")[1]+"LinkSets.ttl", "UTF-8"));
+				fout3 = new FileOutputStream("/tmp/Void_"+species+"_ensembl_"+URLEncoder.encode(dataSource.split("#")[1]+"LinkSets.ttl", "UTF-8"));
 				voidDescriptionModel.write(fout3, "TURTLE");
 			}	
 		}
@@ -55,7 +56,7 @@ public class createLinkSets {
 		//Get the Ensembl Human Linksets.
 		justDoIt("homo_sapiens_core_71_37");
 		justDoIt("rattus_norvegicus_core_71_5");
-		justDoIt("mus_musculus_core_71_38 ");
+		justDoIt("mus_musculus_core_71_38");
 		justDoIt("canis_familiaris_core_71_31");
 		justDoIt("bos_taurus_core_71_31");
 		justDoIt("caenorhabditis_elegans_core_71_235");
