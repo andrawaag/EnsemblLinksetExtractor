@@ -31,7 +31,8 @@ public class createLinkSets {
 	 */
 	public static void justDoIt(String species) throws UnsupportedEncodingException, FileNotFoundException{
 		System.out.println(species);
-		ResultSet humanDataSourceResultSet = basicCalls.getExternalLinkedDataSources(species);	 
+		ResultSet humanDataSourceResultSet = basicCalls.getExternalLinkedDataSources(species);	
+		basicCalls.createDulExpressesGraphs(species);
 		while (humanDataSourceResultSet.hasNext()) {		
 			QuerySolution dataSolution = humanDataSourceResultSet.next();
 			String dataSource = dataSolution.get("dbName").toString();	

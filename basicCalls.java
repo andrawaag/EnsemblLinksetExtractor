@@ -1,3 +1,5 @@
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Calendar;
@@ -21,24 +23,25 @@ import com.hp.hpl.jena.vocabulary.VCARD;
 
 
 public class basicCalls {
-	public static void createVoidHeaders(Model model, String species, String dataSource) throws UnsupportedEncodingException {
-		Resource dulResource = model.createResource(":dulExpresses");
+	public static void createDulExpressesGraphs( String species) throws FileNotFoundException {
+		Model model = ModelFactory.createDefaultModel();
+		Resource dulResource = model.createResource("https://github.com/andrawaag/EnsemblLinksetExtractor/blob/master/data/Dulexpresses_"+species+".ttl.?raw=true");
 		dulResource.addProperty(RDF.type, FOAF.Organization);
-		Resource geneResource = model.createResource("ftp://ftp.ensembl.org/pub/release-71/mysql/homo_sapiens_core_71_37/gene.txt.gz");
+		Resource geneResource = model.createResource("ftp://ftp.ensembl.org/pub/release-71/mysql/"+species+"/gene.txt.gz");
 		geneResource.addLiteral(Rr.column, "stable_id");
 		geneResource.addLiteral(Rr.column, "gene_id");
 		geneResource.addProperty(DCTerms.description, model.createResource("http://www.ensembl.org/info/docs/api/core/core_schema.html#gene"));
-		Resource externalDbResource = model.createResource("ftp://ftp.ensembl.org/pub/release-71/mysql/homo_sapiens_core_71_37/external_db.txt.gz");
+		Resource externalDbResource = model.createResource("ftp://ftp.ensembl.org/pub/release-71/mysql/"+species+"/external_db.txt.gz");
 		externalDbResource.addLiteral(Rr.column, "external_db_id");
 		externalDbResource.addLiteral(Rr.column, "db_name");
 		externalDbResource.addProperty(DCTerms.description, model.createResource("http://www.ensembl.org/info/docs/api/core/core_schema.html#external_db"));		
-		Resource xrefResource = model.createResource("ftp://ftp.ensembl.org/pub/release-71/mysql/homo_sapiens_core_71_37/xref.txt.gz");
+		Resource xrefResource = model.createResource("ftp://ftp.ensembl.org/pub/release-71/mysql/"+species+"/xref.txt.gz");
 		xrefResource.addLiteral(Rr.tableName, "xref_id");
 		xrefResource.addLiteral(Rr.tableName, "external_db_id");
 		xrefResource.addLiteral(Rr.tableName, "dbprimary_acc");
 		xrefResource.addLiteral(Rr.tableName, "display_label");
 		xrefResource.addProperty(DCTerms.description, model.createResource("http://www.ensembl.org/info/docs/api/core/core_schema.html#external_db"));		
-		Resource objectXrefResource = model.createResource("ftp://ftp.ensembl.org/pub/release-71/mysql/homo_sapiens_core_71_37/object_xref.txt.gz");
+		Resource objectXrefResource = model.createResource("ftp://ftp.ensembl.org/pub/release-71/mysql/"+species+"/object_xref.txt.gz");
 		objectXrefResource.addLiteral(Rr.tableName, "object_xref_id");
 		objectXrefResource.addLiteral(Rr.tableName, "ensembl_id");
 		objectXrefResource.addProperty(DCTerms.description, model.createResource("http://www.ensembl.org/info/docs/api/core/core_schema.html#external_db"));		
@@ -46,7 +49,14 @@ public class basicCalls {
 		dulResource.addProperty(Rr.tableName, geneResource);
 		dulResource.addProperty(Rr.tableName, externalDbResource);
 		dulResource.addProperty(Rr.tableName, xrefResource);
-		dulResource.addProperty(Rr.tableName, model.createResource("ftp://ftp.ensembl.org/pub/release-71/mysql/homo_sapiens_core_71_37/object_xref.txt.gz"));
+		dulResource.addProperty(Rr.tableName, model.createResource("ftp://ftp.ensembl.org/pub/release-71/mysql/"+species+"/object_xref.txt.gz"));
+		FileOutputStream fout3;
+		fout3 = new FileOutputStream("/tmp/Dulexpresses_"+species+".ttl");
+		model.write(fout3, "TURTLE");
+	}
+	
+	public static void createVoidHeaders(Model model, String species, String dataSource) throws UnsupportedEncodingException {
+		Resource dulResource = model.createResource("https://github.com/andrawaag/EnsemblLinksetExtractor/blob/master/data/Dulexpresses_"+species+".ttl.?raw=true");
 		Property dulExpresses = model.createProperty("http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#expresses");
 		Resource createByResource = model.createResource("http://orcid.org/0000-0001-9773-4008");
 		Resource voidHeaderResource = model.createResource();
@@ -67,7 +77,7 @@ public class basicCalls {
 		linksetResource.addProperty(Pav.retrievedFrom, model.createResource("ftp://ftp.ensembl.org/pub/release-71/mysql/"));
 		linksetResource.addProperty(Pav.retrievedBy, createByResource);
 		linksetResource.addProperty(Pav.createdWith, model.createResource("https://raw.github.com/andrawaag/EnsemblLinksetExtractor/master/createLinkSets.java"));
-		linksetResource.addProperty(dulExpresses, model.createResource("http://dbpedia.org/page/Ensembl"));
+		linksetResource.addProperty(dulExpresses, dulResource);
 		linksetResource.addLiteral(Pav.version, species.split("_")[3]+"_"+species.split("_")[4]);
 		linksetResource.addProperty(Void.subjectsTarget, model.createResource("http://identifiers.org/ensembl"));
 		linksetResource.addProperty(Void.objectsTarget, model.createResource("http://identifiers.org/"+URLEncoder.encode(dataSource.split("#")[1], "UTF-8")));
