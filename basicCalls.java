@@ -11,16 +11,10 @@ import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.vocabulary.DCTerms;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.VCARD;
-
 
 public class basicCalls {
 	public static void createDulExpressesGraphs( String species) throws FileNotFoundException {
@@ -86,8 +80,8 @@ public class basicCalls {
 	}
 
 	public static Model getEnsemblLinkSets(String species, String dataSource){
-		Model humanLinkSetModel = ModelFactory.createDefaultModel();
-		if (identifiersOrg.get(dataSource) != null) {
+        Model model = ModelFactory.createDefaultModel();
+		if (VoidCreator.identifiersOrg.get(dataSource) != null) {
 			String getQuery = "SELECT DISTINCT * " + 
 			"FROM <http://"+species+".ensembl.org> " + 
 			"WHERE { " + 
@@ -110,14 +104,14 @@ public class basicCalls {
 				// System.out.println(externalEnsembl);
 				String primaryAcc = solution.get("dbPrimaryAcc").toString();
 				//System.out.println(externalEnsembl);
-				Resource ensemblResource = humanLinkSetModel.createResource("http://identifiers.org/ensembl/"+externalEnsembl.split("#")[1]);
+				Resource ensemblResource = model.createResource("http://identifiers.org/ensembl/"+externalEnsembl.split("#")[1]);
 				// System.out.println(ensemblResource.getURI().toString());
-				Resource externalIdentifierResource = humanLinkSetModel.createResource(identifiersOrg.get(dataSource)+primaryAcc.split("#")[1]);
+				Resource externalIdentifierResource = model.createResource(VoidCreator.identifiersOrg.get(dataSource)+primaryAcc.split("#")[1]);
 				//System.out.println(externalIdentifierResource.getURI().toString());
-				ensemblResource.addProperty(Skos.relatedMatch, externalIdentifierResource);
+				ensemblResource.addProperty(VoidCreator.linkPredicate, externalIdentifierResource);
 			}
 		}
-		return humanLinkSetModel;	
+		return model;	
 	}
 
 	public static ResultSet getExternalLinkedDataSources(String species){
@@ -132,192 +126,6 @@ public class basicCalls {
 		return dataSourceQueryExecution.execSelect();
 	}
 
-	public static final Hashtable identifiersOrg = getIdentifiersOrg() ;
-	public static Hashtable getIdentifiersOrg() {
-		Hashtable identifiersOrg = new Hashtable();
-		identifiersOrg.put("http://dbName#RefSeq_peptide_predicted", "http://identifiers.org/refseq/");
-		identifiersOrg.put("http://dbName#RGD", "http://identifiers.org/rgd/");
-		identifiersOrg.put("http://dbName#Uniprot_genename", "");
-		identifiersOrg.put("http://dbName#IPI", "http://identifiers.org/ipi/");
-		identifiersOrg.put("http://dbName#EMBL","http://identifiers.org/embl");
-		identifiersOrg.put("http://dbName#protein_id", "http://identifiers.org/");
-		identifiersOrg.put("http://dbName#Uniprot/SWISSPROT", "http://identifiers.org/uniprot/");
-		identifiersOrg.put("http://dbName#UniGene", "http://purl.uniprot.org/unigene/");
-		identifiersOrg.put("http://dbName#PDB", "http://identifiers.org/pdb/");
-		identifiersOrg.put("http://dbName#RefSeq_peptide", "http://identifiers.org/refseq/");
-		identifiersOrg.put("http://dbName#WikiGene", "http://identifiers.org/wikigene/");
-		identifiersOrg.put("http://dbName#EntrezGene", "http://identifiers.org/ncbigene/");
-		identifiersOrg.put("http://dbName#Uniprot/SPTREMBL", "http://identifiers.org/uniprot/");
-		identifiersOrg.put("http://dbName#MEROPS", "http://identifiers.org/merops/");
-		identifiersOrg.put("http://dbName#GO", "http://identifiers.org/goa/");
-		identifiersOrg.put("http://dbName#goslim_goa", "http://identifiers.org/goa/");
-		identifiersOrg.put("http://dbName#RefSeq_mRNA_predicted", "http://identifiers.org/refseq/");
-		identifiersOrg.put("http://dbName#ArrayExpress", "http://identifiers.org/arrayexpress/");
-		identifiersOrg.put("http://dbName#RefSeq_mRNA", "http://identifiers.org/refseq/");
-		identifiersOrg.put("http://dbName#MGI", "http://identifiers.org/mgi/");
-		identifiersOrg.put("http://dbName#MGI_transcript_name", "http://identifiers.org/mgi/");
-		identifiersOrg.put("http://dbName#RefSeq_ncRNA_predicted", "http://identifiers.org/refseq/");
-		identifiersOrg.put("http://dbName#RefSeq_ncRNA", "http://identifiers.org/refseq/");
-		identifiersOrg.put("http://dbName#miRBase", "http://identifiers.org/mirbase/");
-		identifiersOrg.put("http://dbName#RFAM", "http://identifiers.org/rfam/");
-		identifiersOrg.put("http://dbName#Orphanet", "http://identifiers.org/orphanet/");
-		identifiersOrg.put("http://dbName#MIM_MORBID", "http://identifiers.org/omim/");
-		identifiersOrg.put("http://dbName#OTTG", "http://identifiers.org/ensembl/");
-		identifiersOrg.put("http://dbName#LRG", "http://identifiers.org/lrg/");
-		identifiersOrg.put("http://dbName#ENS_LRG_gene", "http://identifiers.org/lrg/"); 
-		identifiersOrg.put("http://dbName#HGNC", "http://identifiers.org/hgnc/");
-		identifiersOrg.put("http://dbName#WikiGene", "http://identifiers.org/wikigene/");
-		identifiersOrg.put("http://dbName#EntrezGene", "http://identifiers.org/ncbigene/");
-		identifiersOrg.put("http://dbName#MIM_GENE", "http://identifiers.org/mim/");
-		identifiersOrg.put("http://dbName#IPI", "http://identifiers.org/ipi/");
-		identifiersOrg.put("http://dbName#EMBL","http://identifiers.org/embl");
-		identifiersOrg.put("http://dbName#protein_id", "http://identifiers.org/");
-		identifiersOrg.put("http://dbName#Uniprot/SWISSPROT", "http://identifiers.org/uniprot/");
-		identifiersOrg.put("http://dbName#Clone_based_ensembl_gene", "http://identifiers.org/ensembl/");
-		identifiersOrg.put("http://dbName#PDB", "http://identifiers.org/pdb/");
-		identifiersOrg.put("http://dbName#RefSeq_peptide", "http://identifiers.org/refseq/");
-		identifiersOrg.put("http://dbName#EntrezGene", "http://identifiers.org/ncbigene/");
-		identifiersOrg.put("http://dbName#Uniprot/SPTREMBL", "http://identifiers.org/uniprot/");
-		identifiersOrg.put("http://dbName#MEROPS", "http://identifiers.org/merops/");
-		identifiersOrg.put("http://dbName#GO", "http://identifiers.org/go/");
-		identifiersOrg.put("http://dbName#goslim_goa", "http://identifiers.org/goa/");
-		identifiersOrg.put("http://dbName#RefSeq_mRNA_predicted", "http://identifiers.org/refseq/");
-		identifiersOrg.put("http://dbName#ArrayExpress", "http://identifiers.org/arrayexpress/");
-		identifiersOrg.put("http://dbName#RefSeq_mRNA", "http://identifiers.org/refseq/");
-		identifiersOrg.put("http://dbName#MGI", "http://identifiers.org/mgi/");
-		identifiersOrg.put("http://dbName#MGI_transcript_name", "http://identifiers.org/mgi/");
-		identifiersOrg.put("http://dbName#RefSeq_ncRNA_predicted", "http://identifiers.org/refseq/");
-		identifiersOrg.put("http://dbName#RefSeq_ncRNA", "http://identifiers.org/refseq/");
-		identifiersOrg.put("http://dbName#miRBase", "http://identifiers.org/mirbase/");
-		identifiersOrg.put("http://dbName#RFAM", "http://identifiers.org/rfam/");
-		identifiersOrg.put("http://dbName#ArrayExpress", "http://identifiers.org/arrayexpress/");
-		identifiersOrg.put("http://dbName#BioGRID", "http://identifiers.org/biogrid/");
-		identifiersOrg.put("http://dbName#GO", "http://identifiers.org/go/");
-		identifiersOrg.put("http://dbName#HGNC", "http://identifiers.org/hgnc/");
-		identifiersOrg.put("http://dbName#Interpro", "http://identifiers.org/interpro/");
-		identifiersOrg.put("http://dbName#MGI", "http://identifiers.org/mgd/");
-		identifiersOrg.put("http://dbName#MIM", "http://identifiers.org/omim/");
-		identifiersOrg.put("http://dbName#PDB", "http://identifiers.org/pdb/");
-		identifiersOrg.put("http://dbName#Superfamily", "http://identifiers.org/supfam/");
-		identifiersOrg.put("http://dbName#GeneDB", "http://identifiers.org/genedb/");
-		identifiersOrg.put("http://dbName#RGD", "http://identifiers.org/rgd/");
-		identifiersOrg.put("http://dbName#SGD", "http://identifiers.org/sgd/");
-		identifiersOrg.put("http://dbName#IPI", "http://identifiers.org/ipi/");
-		identifiersOrg.put("http://dbName#CCDS", "http://identifiers.org/ccds/");
-		identifiersOrg.put("http://dbName#PUBMED", "http://identifiers.org/pubmed/");
-		identifiersOrg.put("http://dbName#RFAM", "http://identifiers.org/rfam/");
-		identifiersOrg.put("http://dbName#EPD", "http://identifiers.org/epd/");
-		identifiersOrg.put("http://dbName#MEROPS", "http://identifiers.org/merops/");
-		identifiersOrg.put("http://dbName#HPA", "http://identifiers.org/hpa/");
-		identifiersOrg.put("http://dbName#UniParc", "http://identifiers.org/uniparc/");
-		identifiersOrg.put("http://dbName#BRENDA", "http://identifiers.org/brenda/");
-		identifiersOrg.put("http://dbName#BioCyc", "http://identifiers.org/biocyc/");
-		identifiersOrg.put("http://dbName#EchoBASE", "http://identifiers.org/echobase/");
-		identifiersOrg.put("http://dbName#EcoGene", "http://identifiers.org/ecogene/");
-		identifiersOrg.put("http://dbName#Leproma", "http://identifiers.org/myco.lepra/");
-		identifiersOrg.put("http://dbName#TubercuList", "http://identifiers.org/myco.tuber/");
-		identifiersOrg.put("http://dbName#ArrayExpress", "http://identifiers.org/arrayexpress/");
-		identifiersOrg.put("http://dbName#DIP", "http://identifiers.org/dip/");
-		identifiersOrg.put("http://dbName#DisProt", "http://identifiers.org/disprot/");
-		identifiersOrg.put("http://dbName#DrugBank", "http://identifiers.org/drugbank/");
-		identifiersOrg.put("http://dbName#HAMAP", "http://identifiers.org/hamap/");
-		identifiersOrg.put("http://dbName#HOGENOM", "http://identifiers.org/hogenom/");
-		identifiersOrg.put("http://dbName#HSSP", "http://identifiers.org/hssp/");
-		identifiersOrg.put("http://dbName#IntAct", "http://identifiers.org/intact/");
-		identifiersOrg.put("http://dbName#PeroxiBase", "http://identifiers.org/peroxibase/");
-		identifiersOrg.put("http://dbName#REBASE", "http://identifiers.org/rebase/");
-		identifiersOrg.put("http://dbName#Reactome", "http://identifiers.org/reactome/");
-		identifiersOrg.put("http://dbName#PGD", "http://identifiers.org/pseudomonas/");
-		identifiersOrg.put("http://dbName#PomBase", "http://identifiers.org/pombase/");
-		identifiersOrg.put("http://dbName#CGD", "http://identifiers.org/cgd/");
-		identifiersOrg.put("http://dbName#ProSite", "http://identifiers.org/prosite/");
-		identifiersOrg.put("http://dbName#SMART", "http://identifiers.org/smart/");
-		identifiersOrg.put("http://dbName#MOD", "http://identifiers.org/obo.psi-mod/");
-		identifiersOrg.put("http://dbName#AGD", "http://identifiers.org/agd/");
-		identifiersOrg.put("http://dbName#PO", "http://identifiers.org/obo.po/");
-		identifiersOrg.put("http://dbName#LRG", "http://identifiers.org/lrg/");
-		identifiersOrg.put("http://dbName#PFAM", "http://identifiers.org/pfam/");
-		identifiersOrg.put("http://dbName#ToxoDB", "http://identifiers.org/toxoplasma/");
-		identifiersOrg.put("http://dbName#Orphanet", "http://identifiers.org/orphanet/");
-		identifiersOrg.put("http://dbName#SO", "http://identifiers.org/obo.so/");
-		identifiersOrg.put("http://dbName#SGN", "http://identifiers.org/sgn/");
-		identifiersOrg.put("http://dbName#INSDC", "http://identifiers.org/insdc/");
-		identifiersOrg.put("http://dbName#GOA", "http://identifiers.org/goa/");
-		identifiersOrg.put("http://dbName#Rhea", "http://identifiers.org/rhea/");
-		identifiersOrg.put("http://dbName#EMBL", "http://indentifiers.org/ena.embl/");
-		identifiersOrg.put("http://dbName#flybase_gene_id", "http://indentifiers.org/flybase/");
-		identifiersOrg.put("http://dbName#flybase_translation_id", "http://indentifiers.org/flybase/");
-		identifiersOrg.put("http://dbName#flybase_polypeptide_id", "http://indentifiers.org/flybase/");
-		identifiersOrg.put("http://dbName#flybase_annotation_id", "http://indentifiers.org/flybase/");
-		identifiersOrg.put("http://dbName#flybase_transcript_id", "http://indentifiers.org/flybase/");
-		identifiersOrg.put("http://dbName#BioGRID", "http://indentifiers.org/biogrid/");
-		identifiersOrg.put("http://dbName#GO", "http://indentifiers.org/go/");
-		identifiersOrg.put("http://dbName#HGNC", "http://indentifiers.org/hgnc/");
-		identifiersOrg.put("http://dbName#Interpro", "http://indentifiers.org/interpro/");
-		identifiersOrg.put("http://dbName#EntrezGene", "http://indentifiers.org/ncbigene/");
-		identifiersOrg.put("http://dbName#MIM", "http://indentifiers.org/omim/");
-		identifiersOrg.put("http://dbName#MIM_GENE", "http://indentifiers.org/omim/");
-		identifiersOrg.put("http://dbName#MIM_MORBID", "http://indentifiers.org/omim/");
-		identifiersOrg.put("http://dbName#PDB", "http://indentifiers.org/pdb/");
-		identifiersOrg.put("http://dbName#protein_id", "http://indentifiers.org/insdc/");
-		identifiersOrg.put("http://dbName#UniProtKB_all", "http://indentifiers.org/uniprot/");
-		identifiersOrg.put("http://dbName#ZFIN_ID", "http://indentifiers.org/zfin/");
-		identifiersOrg.put("http://dbName#ZFIN_xpat", "http://indentifiers.org/zfin.expression/");
-		identifiersOrg.put("http://dbName#RGD", "http://indentifiers.org/rgd/");
-		identifiersOrg.put("http://dbName#miRBase", "http://indentifiers.org/mirbase/");
-		identifiersOrg.put("http://dbName#RFAM", "http://indentifiers.org/rfam/");
-		identifiersOrg.put("http://dbName#PRF", "http://indentifiers.org/ncbiprotein/");
-		identifiersOrg.put("http://dbName#PIR", "http://indentifiers.org/pirsf/");
-		identifiersOrg.put("http://dbName#wormbase_id", "http://indentifiers.org/wormbase/");
-		identifiersOrg.put("http://dbName#EPD", "http://indentifiers.org/epd/");
-		identifiersOrg.put("http://dbName#GPCR", "http://indentifiers.org/gpcrdb/");
-		identifiersOrg.put("http://dbName#MEROPS", "http://indentifiers.org/merops/");
-		identifiersOrg.put("http://dbName#HPA", "http://indentifiers.org/hpa/");
-		identifiersOrg.put("http://dbName#UniParc", "http://indentifiers.org/uniparc/");
-		identifiersOrg.put("http://dbName#BRENDA", "http://indentifiers.org/brenda/");
-		identifiersOrg.put("http://dbName#BioCyc", "http://indentifiers.org/biocyc/");
-		identifiersOrg.put("http://dbName#EchoBASE", "http://indentifiers.org/echobase/");
-		identifiersOrg.put("http://dbName#EcoGene", "http://indentifiers.org/ecogene/");
-		identifiersOrg.put("http://dbName#Leproma", "http://indentifiers.org/myco.lepra/");
-		identifiersOrg.put("http://dbName#SubtiList", "http://indentifiers.org/subtilist/");
-		identifiersOrg.put("http://dbName#TIGR", "http://indentifiers.org/tigrfam/");
-		identifiersOrg.put("http://dbName#TubercuList", "http://indentifiers.org/myco.tuber/");
-		identifiersOrg.put("http://dbName#ArrayExpress", "http://indentifiers.org/arrayexpress/");
-		identifiersOrg.put("http://dbName#DIP", "http://indentifiers.org/dip/");
-		identifiersOrg.put("http://dbName#DisProt", "http://indentifiers.org/disprot/");
-		identifiersOrg.put("http://dbName#DrugBank", "http://indentifiers.org/drugbank/");
-		identifiersOrg.put("http://dbName#HAMAP", "http://indentifiers.org/hamap/");
-		identifiersOrg.put("http://dbName#HOGENOM", "http://indentifiers.org/hogenom/");
-		identifiersOrg.put("http://dbName#HSSP", "http://indentifiers.org/hssp/");
-		identifiersOrg.put("http://dbName#IntAct", "http://indentifiers.org/intact/");
-		identifiersOrg.put("http://dbName#PDBsum", "http://indentifiers.org/pdb/");
-		identifiersOrg.put("http://dbName#PeroxiBase", "http://indentifiers.org/peroxibase/");
-		identifiersOrg.put("http://dbName#Reactome", "http://indentifiers.org/reactome/");
-		identifiersOrg.put("http://dbName#IntEnz", "http://indentifiers.org/ec-code/");
-		identifiersOrg.put("http://dbName#EMBLBANK_GENE", "http://indentifiers.org/ena.embl/");
-		identifiersOrg.put("http://dbName#EMBLBANK_TRANSCRIPT", "http://indentifiers.org/ena.embl/");
-		identifiersOrg.put("http://dbName#COG", "http://indentifiers.org/cogs/");
-		identifiersOrg.put("http://dbName#ProSite", "http://indentifiers.org/prosite/");
-		identifiersOrg.put("http://dbName#SMART", "http://indentifiers.org/smart/");
-		identifiersOrg.put("http://dbName#PBO", "http://indentifiers.org/pombase/");
-		identifiersOrg.put("http://dbName#MOD", "http://indentifiers.org/obo.psi-mod/");
-		identifiersOrg.put("http://dbName#AGD_GENE", "http://indentifiers.org/agd/");
-		identifiersOrg.put("http://dbName#AGD_TRANSCRIPT", "http://indentifiers.org/agd/");
-		identifiersOrg.put("http://dbName#AGD", "http://indentifiers.org/agd/");
-		identifiersOrg.put("http://dbName#EC_NUMBER", "http://indentifiers.org/ec-code/");
-		identifiersOrg.put("http://dbName#Gramene_GenesDB", "http://indentifiers.org/gramene.gene/");
-		identifiersOrg.put("http://dbName#TIGR_LOCUS", "http://indentifiers.org/tigrfam/");
-		identifiersOrg.put("http://dbName#TIGR_LOCUS_MODEL", "http://indentifiers.org/tigrfam/");
-		identifiersOrg.put("http://dbName#TAIR_LOCUS", "http://indentifiers.org/tair.locus/");
-		identifiersOrg.put("http://dbName#TAIR_LOCUS_MODEL", "http://indentifiers.org/tair.locus/");
-		identifiersOrg.put("http://dbName#TIGR_GeneIndex", "http://indentifiers.org/tigrfam/");
-		identifiersOrg.put("http://dbName#GO_to_gene", "http://indentifiers.org/go/");
-		identifiersOrg.put("http://dbName#PFAM", "http://indentifiers.org/pfam/");
-		identifiersOrg.put("http://dbName#INSDC", "http://indentifiers.org/insdc/");
-		identifiersOrg.put("http://dbName#GO_to_transcript", "http://indentifiers.org/go/");
-		identifiersOrg.put("http://dbName#TIGR_ID", "http://indentifiers.org/tigrfam/");
-		identifiersOrg.put("http://dbName#TIGR_TRANSCRIPT_ID", "http://indentifiers.org/tigrfam/");
-		identifiersOrg.put("http://dbName#GOA", "http://indentifiers.org/goa/");
 
 
 		return identifiersOrg;

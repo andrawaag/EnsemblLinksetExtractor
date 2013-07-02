@@ -1,74 +1,97 @@
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Calendar;
-import java.util.Hashtable;
-
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.vocabulary.DCTerms;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.VCARD;
-
-
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.GregorianCalendar;
 
 public class createLinkSets {
+       
 	/**
 	 * @param args
 	 * @throws FileNotFoundException 
 	 * @throws UnsupportedEncodingException 
 	 */
-	public static void justDoIt(String species) throws UnsupportedEncodingException, FileNotFoundException{
+	public static void justDoIt(VoidCreator voidCreator, String species) throws UnsupportedEncodingException,  IOException{
 		System.out.println(species);
+        
 		ResultSet humanDataSourceResultSet = basicCalls.getExternalLinkedDataSources(species);	
-		basicCalls.createDulExpressesGraphs(species);
 		while (humanDataSourceResultSet.hasNext()) {		
 			QuerySolution dataSolution = humanDataSourceResultSet.next();
 			String dataSource = dataSolution.get("dbName").toString();	
-			Model voidDescriptionModel = ModelFactory.createDefaultModel();
-			basicCalls.createVoidHeaders(voidDescriptionModel, species, dataSource);			
-			Model linkSetModel = basicCalls.getEnsemblLinkSets(species, dataSource);				
+            Model linkSetModel = basicCalls.getEnsemblLinkSets(species, dataSource);
 			if (linkSetModel.size()>0) {
-				//linksetResource.addLiteral(Void.triples, humanLinkSetMode.size());
-				FileOutputStream fout2;
-				fout2 = new FileOutputStream("/tmp/"+species+"_ensembl_"+URLEncoder.encode(dataSource.split("#")[1]+"LinkSets.ttl", "UTF-8"));
-				linkSetModel.write(fout2, "TURTLE");
-
-				FileOutputStream fout3;
-				fout3 = new FileOutputStream("/tmp/Void_"+species+"_ensembl_"+URLEncoder.encode(dataSource.split("#")[1]+"LinkSets.ttl", "UTF-8"));
-				voidDescriptionModel.write(fout3, "TURTLE");
+                Resource linksetVoid = voidCreator.createSpecificVoid(species, dataSource, linkSetModel.size());
+                Resource linkset = linkSetModel.createResource(":linkset");
+                linkset.addProperty(Void.inDataset, linksetVoid);
+				FileOutputStream fout;
+				fout = new FileOutputStream("/tmp/"+species+"_ensembl_"+URLEncoder.encode(dataSource.split("#")[1]+"LinkSets.ttl", "UTF-8"));
+				linkSetModel.write(fout, "TURTLE");
+                fout.close();
 			}	
 		}
-	}
+	}/**/
 
-	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
-		Hashtable identifiersOrg = basicCalls.identifiersOrg;
+	/**
+     * Test version without connection to database
+	 * @param args
+	 * @throws FileNotFoundException 
+	 * @throws UnsupportedEncodingException 
+	 * /
+	public static void justDoIt(VoidCreator voidCreator, String species) throws UnsupportedEncodingException,  IOException{
+		System.out.println(species);
+        String dataSource = "http://dbName#HGNC"; //Testing alternative
+        Model linkSetModel = ModelFactory.createDefaultModel();
+        Resource linksetVoid = voidCreator.createSpecificVoid(species, dataSource, linkSetModel.size());
+        Resource linkset = linkSetModel.createResource(":linkset");
+        linkset.addProperty(Void.inDataset, linksetVoid);
+        FileOutputStream fout;
+        fout = new FileOutputStream("/tmp/"+species+"_ensembl_"+URLEncoder.encode(dataSource.split("#")[1]+"LinkSets.ttl", "UTF-8"));
+        linkSetModel.write(fout, "TURTLE");
+        fout.close();
+	}/**/
+
+    public static void createMainVoid(VoidCreator voidCreator) throws IOException{        
+        voidCreator.createGeneralVoid("71", new GregorianCalendar(2013, 4, 10));
+        voidCreator.createSpecies("homo_sapiens_core_71_37", new GregorianCalendar(2013, 3, 27));
+		voidCreator.createSpecies("rattus_norvegicus_core_71_5", new GregorianCalendar(2013, 3, 27));
+		voidCreator.createSpecies("mus_musculus_core_71_38", new GregorianCalendar(2013, 3, 27));
+		voidCreator.createSpecies("canis_familiaris_core_71_31", new GregorianCalendar(2013, 3, 27));
+		voidCreator.createSpecies("bos_taurus_core_71_31", new GregorianCalendar(2013, 3, 27));
+		voidCreator.createSpecies("caenorhabditis_elegans_core_71_235", new GregorianCalendar(2013, 3, 27));
+		voidCreator.createSpecies("canis_familiaris_core_71_31", new GregorianCalendar(2013, 3, 27));
+		voidCreator.createSpecies("danio_rerio_core_71_9", new GregorianCalendar(2013, 3, 27));
+		voidCreator.createSpecies("drosophila_melanogaster_core_71_546", new GregorianCalendar(2013, 3, 27));
+		voidCreator.createSpecies("equus_caballus_core_71_2", new GregorianCalendar(2013, 3, 27));
+		voidCreator.createSpecies("gallus_gallus_core_71_4", new GregorianCalendar(2013, 3, 27));
+		voidCreator.createSpecies("pan_troglodytes_core_71_214", new GregorianCalendar(2013, 3, 27));
+		voidCreator.createSpecies("saccharomyces_cerevisiae_core_71_4", new GregorianCalendar(2013, 3, 27));
+    }
+
+	public static void main(String[] args) throws UnsupportedEncodingException, IOException {
+        VoidCreator voidCreator = new VoidCreator();
+        createMainVoid(voidCreator);
 		//Get the Ensembl Human Linksets.
-		justDoIt("homo_sapiens_core_71_37");
-		justDoIt("rattus_norvegicus_core_71_5");
-		justDoIt("mus_musculus_core_71_38");
-		justDoIt("canis_familiaris_core_71_31");
-		justDoIt("bos_taurus_core_71_31");
-		justDoIt("caenorhabditis_elegans_core_71_235");
-		justDoIt("canis_familiaris_core_71_31");
-		justDoIt("danio_rerio_core_71_9");
-		justDoIt("drosophila_melanogaster_core_71_546");
-		justDoIt("equus_caballus_core_71_2");
-		justDoIt("gallus_gallus_core_71_4");
-		justDoIt("pan_troglodytes_core_71_214");
-		justDoIt("saccharomyces_cerevisiae_core_71_4");
-		
+		justDoIt(voidCreator, "homo_sapiens_core_71_37");
+		justDoIt(voidCreator, "rattus_norvegicus_core_71_5");
+		justDoIt(voidCreator, "mus_musculus_core_71_38");
+		justDoIt(voidCreator, "canis_familiaris_core_71_31");
+		justDoIt(voidCreator, "bos_taurus_core_71_31");
+		justDoIt(voidCreator, "caenorhabditis_elegans_core_71_235");
+		justDoIt(voidCreator, "canis_familiaris_core_71_31");
+		justDoIt(voidCreator, "danio_rerio_core_71_9");
+		justDoIt(voidCreator, "drosophila_melanogaster_core_71_546");
+		justDoIt(voidCreator, "equus_caballus_core_71_2");
+		justDoIt(voidCreator, "gallus_gallus_core_71_4");
+		justDoIt(voidCreator, "pan_troglodytes_core_71_214");
+		justDoIt(voidCreator, "saccharomyces_cerevisiae_core_71_4");
+        voidCreator.write("/tmp/Ensembl_71.ttl");
+
 	}
 }
 
