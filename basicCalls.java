@@ -137,7 +137,7 @@ public class basicCalls {
 		Hashtable identifiersOrg = new Hashtable();
 		identifiersOrg.put("http://dbName#RefSeq_peptide_predicted", "http://identifiers.org/refseq/");
 		identifiersOrg.put("http://dbName#RGD", "http://identifiers.org/rgd/");
-		identifiersOrg.put("http://dbName#Uniprot_genename", "http://identifiers.org/uniprot/");
+		identifiersOrg.put("http://dbName#Uniprot_genename", "");
 		identifiersOrg.put("http://dbName#IPI", "http://identifiers.org/ipi/");
 		identifiersOrg.put("http://dbName#EMBL","http://identifiers.org/embl");
 		identifiersOrg.put("http://dbName#protein_id", "http://identifiers.org/");
@@ -169,7 +169,6 @@ public class basicCalls {
 		identifiersOrg.put("http://dbName#WikiGene", "http://identifiers.org/wikigene/");
 		identifiersOrg.put("http://dbName#EntrezGene", "http://identifiers.org/ncbigene/");
 		identifiersOrg.put("http://dbName#MIM_GENE", "http://identifiers.org/mim/");
-		identifiersOrg.put("http://dbName#Uniprot_genename", "http://purl.uniprot.org/uniprot/");
 		identifiersOrg.put("http://dbName#IPI", "http://identifiers.org/ipi/");
 		identifiersOrg.put("http://dbName#EMBL","http://identifiers.org/embl");
 		identifiersOrg.put("http://dbName#protein_id", "http://identifiers.org/");
