@@ -19,7 +19,7 @@ import java.util.HashMap;
 public class VoidCreator {
     
     private static final String BASE_URI = "https://raw.github.com/andrawaag/EnsemblLinksetExtractor/master/data/";
-    public static final Property linkPredicate = Skos.exactMatch;
+    public static final Property linkPredicate = Skos.relatedMatch;
   
     private final Model model;
     private final Resource andra;
