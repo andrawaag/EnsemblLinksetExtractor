@@ -1,6 +1,8 @@
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Resource;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,9 +10,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.GregorianCalendar;
 
-
-
 public class createLinkSets {
+       
 	/**
 	 * @param args
 	 * @throws FileNotFoundException 
@@ -18,22 +19,42 @@ public class createLinkSets {
 	 */
 	public static void justDoIt(VoidCreator voidCreator, String species) throws UnsupportedEncodingException,  IOException{
 		System.out.println(species);
+        
 		ResultSet humanDataSourceResultSet = basicCalls.getExternalLinkedDataSources(species);	
 		while (humanDataSourceResultSet.hasNext()) {		
 			QuerySolution dataSolution = humanDataSourceResultSet.next();
 			String dataSource = dataSolution.get("dbName").toString();	
-            //String dataSource = "http://dbName#HGNC"; //Testing alternative
-            Model linkSetModel = basicCalls.getEnsemblLinkSets(species, dataSource);				
+            Model linkSetModel = basicCalls.getEnsemblLinkSets(species, dataSource);
 			if (linkSetModel.size()>0) {
-                //Decided to write void in same file as linksets as most of the void is in the general void file
-                voidCreator.createSpecificVoid(linkSetModel, species, dataSource, linkSetModel.size());
+                Resource linksetVoid = voidCreator.createSpecificVoid(species, dataSource, linkSetModel.size());
+                Resource linkset = linkSetModel.createResource(":linkset");
+                linkset.addProperty(Void.inDataset, linksetVoid);
 				FileOutputStream fout;
 				fout = new FileOutputStream("/tmp/"+species+"_ensembl_"+URLEncoder.encode(dataSource.split("#")[1]+"LinkSets.ttl", "UTF-8"));
 				linkSetModel.write(fout, "TURTLE");
                 fout.close();
 			}	
 		}
-	}
+	}/**/
+
+	/**
+     * Test version without connection to database
+	 * @param args
+	 * @throws FileNotFoundException 
+	 * @throws UnsupportedEncodingException 
+	 * /
+	public static void justDoIt(VoidCreator voidCreator, String species) throws UnsupportedEncodingException,  IOException{
+		System.out.println(species);
+        String dataSource = "http://dbName#HGNC"; //Testing alternative
+        Model linkSetModel = ModelFactory.createDefaultModel();
+        Resource linksetVoid = voidCreator.createSpecificVoid(species, dataSource, linkSetModel.size());
+        Resource linkset = linkSetModel.createResource(":linkset");
+        linkset.addProperty(Void.inDataset, linksetVoid);
+        FileOutputStream fout;
+        fout = new FileOutputStream("/tmp/"+species+"_ensembl_"+URLEncoder.encode(dataSource.split("#")[1]+"LinkSets.ttl", "UTF-8"));
+        linkSetModel.write(fout, "TURTLE");
+        fout.close();
+	}/**/
 
     public static void createMainVoid(VoidCreator voidCreator) throws IOException{        
         voidCreator.createGeneralVoid("71", new GregorianCalendar(2013, 4, 10));
@@ -50,7 +71,6 @@ public class createLinkSets {
 		voidCreator.createSpecies("gallus_gallus_core_71_4", new GregorianCalendar(2013, 3, 27));
 		voidCreator.createSpecies("pan_troglodytes_core_71_214", new GregorianCalendar(2013, 3, 27));
 		voidCreator.createSpecies("saccharomyces_cerevisiae_core_71_4", new GregorianCalendar(2013, 3, 27));
-        voidCreator.write("/tmp/Ensembl_71.ttl");
     }
 
 	public static void main(String[] args) throws UnsupportedEncodingException, IOException {
@@ -70,6 +90,8 @@ public class createLinkSets {
 		justDoIt(voidCreator, "gallus_gallus_core_71_4");
 		justDoIt(voidCreator, "pan_troglodytes_core_71_214");
 		justDoIt(voidCreator, "saccharomyces_cerevisiae_core_71_4");
+        voidCreator.write("/tmp/Ensembl_71.ttl");
+
 	}
 }
 

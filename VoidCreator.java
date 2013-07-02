@@ -42,6 +42,16 @@ public class VoidCreator {
         ensemblLinkset = model.createResource(BASE_URI + "ensemblLinksetDataset");
         ensemblLicense = model.createResource("http://apr2013.archive.ensembl.org/info/about/legal/index.html");
         script = model.createResource("https://raw.github.com/andrawaag/EnsemblLinksetExtractor/master/createLinkSets.java");
+        //TODO These don't appear to work.
+        model.setNsPrefix("", BASE_URI);
+        model.setNsPrefix("dcterms", DCTerms.NS);
+        model.setNsPrefix("dctypes", DCTypes.NS);
+        model.setNsPrefix("dul", Dul.NS);
+        model.setNsPrefix("pac", Pav.NS);
+        model.setNsPrefix("rdf", RDF.getURI());
+        model.setNsPrefix("skos", Skos.NS);
+        model.setNsPrefix("void", Void.NS);
+        model.setNsPrefix("xsd", "http://www.w3.org/2001/XMLSchema#");
     }
      
     //Here I am being lazy as all species so far appear to be name_name_name_majorVersiob_minorVersion   
@@ -67,8 +77,12 @@ public class VoidCreator {
         return parts[3] + "_" + parts[4];     
     }
     
-    private Resource createSpeciesLinkset(Model specificModel, String species){
-        return specificModel.createResource(BASE_URI + extractSpeciesOneWord(species) + "-linkset");
+    private Resource createSpeciesLinkset(String species){
+        return model.createResource(BASE_URI + extractSpeciesOneWord(species) + "-linkset");
+    }
+
+    private Resource createSpeciesDataSetLinkset(String species, String dataSetName){
+        return model.createResource(BASE_URI + extractSpeciesOneWord(species) + "-" + dataSetName + "-linkset");
     }
 
     private Resource createSpeciesDataset(String species){
@@ -87,21 +101,20 @@ public class VoidCreator {
         return model.createResource("ftp://ftp.ensembl.org/pub/release-" + version + "/mysql/" + species);
     }
     
-    private void createDatasetDescription(Model specificModel, String title, Resource linksetResource) {
-		Resource voidHeaderResource = specificModel.createResource();
+    private void createDatasetDescription() {
+		Resource voidHeaderResource = model.createResource();
 		voidHeaderResource.addProperty(RDF.type, Void.DatasetDescription);
-		voidHeaderResource.addProperty(DCTerms.title, specificModel.createLiteral(title));
+		voidHeaderResource.addProperty(DCTerms.title, model.createLiteral("Ensembl Genome VoID Description"));
 		voidHeaderResource.addProperty(Pav.createdBy, andra);
 		voidHeaderResource.addProperty(Pav.createdBy, christian);
 		voidHeaderResource.addProperty(Pav.createdWith, script);
 		Calendar now = Calendar.getInstance();
-		Literal nowLiteral = specificModel.createTypedLiteral(now);
+		Literal nowLiteral = model.createTypedLiteral(now);
 		voidHeaderResource.addProperty(Pav.createdOn, nowLiteral);
-		voidHeaderResource.addProperty(FOAF.primaryTopic, linksetResource);
+		voidHeaderResource.addProperty(FOAF.primaryTopic, ensemblLinkset);
 	}
      
     public void createGeneralVoid(String version, Calendar issuedOn){
-        createDatasetDescription(model, "Ensembl Genome VoID Description", ensemblLinkset);
         createEnsemblLinksetDataset(version);
         createEnsemblDataset(version, issuedOn);
     }
@@ -129,7 +142,7 @@ public class VoidCreator {
     }
     
 	private void createEnsemblDataset(String version, Calendar issuedOn) {
-		ensemblDataset.addProperty(RDF.type, Void.Dataset);
+		ensemblDataset.addProperty(RDF.type, DCTypes.Dataset);
 		ensemblDataset.addLiteral(DCTerms.title, "Ensembl Genome Database");
  		ensemblDataset.addLiteral(DCTerms.description, "The Ensembl project produces genome databases for vertebrates and other eukaryotic species, and makes this information freely available online.");
         ensemblDataset.addProperty(DCTerms.publisher, ensembl);
@@ -144,7 +157,7 @@ public class VoidCreator {
     
     public void createSpecies(String species, Calendar issuedOn) throws FileNotFoundException {
         createDulExpresses(species);
-        Resource speciesLinkset = createSpeciesLinkset(model, species);
+        Resource speciesLinkset = createSpeciesLinkset(species);
         Resource speciesDataset = createSpeciesDataset(species);
         ensemblLinkset.addProperty(Void.subset, speciesLinkset);
         ensemblDataset.addProperty(Void.subset, speciesDataset);
@@ -204,24 +217,28 @@ public class VoidCreator {
 		dulResource.addProperty(Rr.tableName, model.createResource("ftp://ftp.ensembl.org/pub/release-71/mysql/"+species+"/object_xref.txt.gz"));
 	}
   
-	public void createSpecificVoid(Model specificModel, String species, String dataSource, long size) throws UnsupportedEncodingException {       
+	public Resource createSpecificVoid(String species, String dataSource, long size) throws UnsupportedEncodingException {       
         String dataSourceName = URLEncoder.encode(dataSource.split("#")[1], "UTF-8");
         String speciesName = extractSpeciesName(species);
-		Resource linksetResource = specificModel.createResource(":linkset");	
-        createDatasetDescription(specificModel, "Ensembl-" + dataSourceName + " VoID Description", linksetResource);
         
-		linksetResource.addProperty(RDF.type, Void.Linkset);
-		linksetResource.addProperty(DCTerms.title,  
-                specificModel.createLiteral("Ensembl-" + dataSourceName + " Linkset for " + speciesName,"en"));
-		linksetResource.addProperty(DCTerms.description, 
-                specificModel.createLiteral("A linkset which links Ensembl with "+dataSourceName+ " for the species " + speciesName,"en"));
+		Resource specificResource = createSpeciesDataSetLinkset(species, dataSourceName);	
+        
+		specificResource.addProperty(RDF.type, Void.Linkset);
+		specificResource.addProperty(DCTerms.title,  
+                model.createLiteral("Ensembl-" + dataSourceName + " Linkset for " + speciesName,"en"));
+		specificResource.addProperty(DCTerms.description, 
+                model.createLiteral("A linkset which links Ensembl with "+dataSourceName+ " for the species " + speciesName,"en"));
         //TODO whic is the correct approach here?
         //String object = "http://identifiers.org/" + dataSourceName;
         String object = identifiersOrg.get(dataSource);
-		linksetResource.addProperty(Void.objectsTarget, specificModel.createResource(object));
-        linksetResource.addLiteral(Void.triples, size);
-        Resource speciesLinkset = createSpeciesLinkset(specificModel, species);
-        speciesLinkset.addProperty(Void.subset, linksetResource);
+		specificResource.addProperty(Void.objectsTarget, model.createResource(object));
+        specificResource.addLiteral(Void.triples, size);
+        
+        //Subset back to the species linkset and indirectly the rest
+        Resource speciesLinkset = createSpeciesLinkset(species);
+        speciesLinkset.addProperty(Void.subset, specificResource);
+        
+        return specificResource;
 	}
     
     public void write(String path) throws IOException{
