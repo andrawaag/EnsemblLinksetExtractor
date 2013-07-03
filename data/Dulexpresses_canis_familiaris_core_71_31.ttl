@@ -1,0 +1,30 @@
+<ftp://ftp.ensembl.org/pub/release-71/mysql/canis_familiaris_core_71_31/xref.txt.gz>
+      <http://purl.org/dc/terms/description>
+              <http://www.ensembl.org/info/docs/api/core/core_schema.html#external_db> ;
+      <http://www.w3.org/ns/r2rml#tableName>
+              "xref_id"^^<http://www.w3.org/2001/XMLSchema#string> , "external_db_id"^^<http://www.w3.org/2001/XMLSchema#string> , "dbprimary_acc"^^<http://www.w3.org/2001/XMLSchema#string> , "display_label"^^<http://www.w3.org/2001/XMLSchema#string> .
+
+<ftp://ftp.ensembl.org/pub/release-71/mysql/canis_familiaris_core_71_31/object_xref.txt.gz>
+      <http://purl.org/dc/terms/description>
+              <http://www.ensembl.org/info/docs/api/core/core_schema.html#external_db> ;
+      <http://www.w3.org/ns/r2rml#tableName>
+              "object_xref_id"^^<http://www.w3.org/2001/XMLSchema#string> , "ensembl_id"^^<http://www.w3.org/2001/XMLSchema#string> .
+
+<https://raw.github.com/andrawaag/EnsemblLinksetExtractor/blob/master/data/Dulexpresses_canis_familiaris_core_71_31.ttl>
+      a       <http://xmlns.com/foaf/0.1/Organization> ;
+      <http://www.w3.org/2001/vcard-rdf/3.0#Orgname>
+              <http://www.ensembl.org> ;
+      <http://www.w3.org/ns/r2rml#tableName>
+              <ftp://ftp.ensembl.org/pub/release-71/mysql/canis_familiaris_core_71_31/xref.txt.gz> , <ftp://ftp.ensembl.org/pub/release-71/mysql/canis_familiaris_core_71_31/object_xref.txt.gz> , <ftp://ftp.ensembl.org/pub/release-71/mysql/canis_familiaris_core_71_31/external_db.txt.gz> , <ftp://ftp.ensembl.org/pub/release-71/mysql/canis_familiaris_core_71_31/gene.txt.gz> .
+
+<ftp://ftp.ensembl.org/pub/release-71/mysql/canis_familiaris_core_71_31/external_db.txt.gz>
+      <http://purl.org/dc/terms/description>
+              <http://www.ensembl.org/info/docs/api/core/core_schema.html#external_db> ;
+      <http://www.w3.org/ns/r2rml#column>
+              "external_db_id"^^<http://www.w3.org/2001/XMLSchema#string> , "db_name"^^<http://www.w3.org/2001/XMLSchema#string> .
+
+<ftp://ftp.ensembl.org/pub/release-71/mysql/canis_familiaris_core_71_31/gene.txt.gz>
+      <http://purl.org/dc/terms/description>
+              <http://www.ensembl.org/info/docs/api/core/core_schema.html#gene> ;
+      <http://www.w3.org/ns/r2rml#column>
+              "gene_id"^^<http://www.w3.org/2001/XMLSchema#string> , "stable_id"^^<http://www.w3.org/2001/XMLSchema#string> .

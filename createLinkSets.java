@@ -56,7 +56,9 @@ public class createLinkSets {
         fout.close();
 	}/**/
 
-    public static void createMainVoid(VoidCreator voidCreator) throws IOException{        
+    public static void createMainVoid(VoidCreator voidCreator) throws IOException{ 
+    	// Needs to be changed urgently, because this makes the code ineffective with future releases of Ensembl
+    	// Should be only mentioned in the main class
         voidCreator.createGeneralVoid("71", new GregorianCalendar(2013, 4, 10));
         voidCreator.createSpecies("homo_sapiens_core_71_37", new GregorianCalendar(2013, 3, 27));
 		voidCreator.createSpecies("rattus_norvegicus_core_71_5", new GregorianCalendar(2013, 3, 27));
@@ -71,6 +73,7 @@ public class createLinkSets {
 		voidCreator.createSpecies("gallus_gallus_core_71_4", new GregorianCalendar(2013, 3, 27));
 		voidCreator.createSpecies("pan_troglodytes_core_71_214", new GregorianCalendar(2013, 3, 27));
 		voidCreator.createSpecies("saccharomyces_cerevisiae_core_71_4", new GregorianCalendar(2013, 3, 27));
+		voidCreator.createSpecies("homo_sapiens_funcgen_71_37", new GregorianCalendar(2013, 3, 27));
     }
 
 	public static void main(String[] args) throws UnsupportedEncodingException, IOException {
@@ -90,6 +93,7 @@ public class createLinkSets {
 		justDoIt(voidCreator, "gallus_gallus_core_71_4");
 		justDoIt(voidCreator, "pan_troglodytes_core_71_214");
 		justDoIt(voidCreator, "saccharomyces_cerevisiae_core_71_4");
+		justDoIt(voidCreator, "homo_sapiens_funcgen_71_37");
         voidCreator.write("/tmp/Ensembl_71.ttl");
 
 	}
