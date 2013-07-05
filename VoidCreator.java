@@ -64,7 +64,7 @@ public class VoidCreator {
     //TODO add a nice lookup table here
     private String extractSpeciesOneWord (String species){
         String[] parts = species.split("_");
-        return parts[0] + "_" + parts[1] + "_" + parts[2];     
+        return parts[0] + "_" + parts[1];     
     }
     
     private String extractMajorVersion (String species){
