@@ -258,7 +258,7 @@ public class VoidCreator {
 		identifiersOrg.put("http://dbName#CCDS", "http://identifiers.org/ccds/");
 		identifiersOrg.put("http://dbName#CGD", "http://identifiers.org/cgd/");
 		identifiersOrg.put("http://dbName#COG", "http://identifiers.org/cogs/");
-		identifiersOrg.put("http://dbName#Clone_based_vega_gene", "http://identifiers.org/vega/"); // TODO CHECK!!!!!!	
+//		identifiersOrg.put("http://dbName#Clone_based_vega_gene", "http://identifiers.org/vega/"); // TODO CHECK!!!!!!	
 		identifiersOrg.put("http://dbName#DIP", "http://identifiers.org/dip/");
 		identifiersOrg.put("http://dbName#DisProt", "http://identifiers.org/disprot/");
 		identifiersOrg.put("http://dbName#DrugBank", "http://identifiers.org/drugbank/");
@@ -267,7 +267,7 @@ public class VoidCreator {
 		identifiersOrg.put("http://dbName#EMBLBANK_GENE", "http://identifiers.org/ena.embl/");
 		identifiersOrg.put("http://dbName#EMBLBANK_TRANSCRIPT", "http://identifiers.org/ena.embl/");
 		identifiersOrg.put("http://dbName#ENS_LRG_gene", "http://identifiers.org/lrg/"); 
-		identifiersOrg.put("http://dbName#EPD", "http://identifiers.org/epd/");
+//TODO check this		identifiersOrg.put("http://dbName#EPD", "http://identifiers.org/epd/");
 		identifiersOrg.put("http://dbName#EchoBASE", "http://identifiers.org/echobase/");
 		identifiersOrg.put("http://dbName#EcoGene", "http://identifiers.org/ecogene/");
 		identifiersOrg.put("http://dbName#EntrezGene", "http://identifiers.org/ncbigene/");
@@ -292,7 +292,7 @@ public class VoidCreator {
 		identifiersOrg.put("http://dbName#Leproma", "http://identifiers.org/myco.lepra/");
 		identifiersOrg.put("http://dbName#MEROPS", "http://identifiers.org/merops/");
 		identifiersOrg.put("http://dbName#MGI", "http://identifiers.org/mgd/");
-		identifiersOrg.put("http://dbName#MGI_transcript_name", "http://identifiers.org/mgi/");
+//TOD check this		identifiersOrg.put("http://dbName#MGI_transcript_name", "http://identifiers.org/mgi/");
 		identifiersOrg.put("http://dbName#MIM", "http://identifiers.org/omim/");
 		identifiersOrg.put("http://dbName#MIM_GENE", "http://identifiers.org/omim/");
 		identifiersOrg.put("http://dbName#MIM_MORBID", "http://identifiers.org/omim/");
