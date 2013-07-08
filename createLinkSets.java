@@ -94,8 +94,11 @@ public class createLinkSets {
 		justDoIt(voidCreator, "pan_troglodytes_core_71_214");
 		justDoIt(voidCreator, "saccharomyces_cerevisiae_core_71_4");
 		justDoIt(voidCreator, "homo_sapiens_funcgen_71_37");
+        //TODO check this.
+        Resource ensemblUniprot = voidCreator.createSpecificVoid("homo_sapiens_core_71_37", "http://dbName#Uniprot/SPTREMBL", -1);
         voidCreator.write("/tmp/Ensembl_71.ttl");
-
+        System.out.println("Please add the following statement to the output of mapUniProtGeneName2upId");
+        System.out.println("<:linkset>  <http://rdfs.org/ns/void#inDataset> <" + ensemblUniprot + ">.");
 	}
 }
 
