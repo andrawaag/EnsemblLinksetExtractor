@@ -115,6 +115,7 @@ public class VoidCreator {
 	}
      
     public void createGeneralVoid(String version, Calendar issuedOn){
+        createDatasetDescription();
         createEnsemblLinksetDataset(version);
         createEnsemblDataset(version, issuedOn);
     }
