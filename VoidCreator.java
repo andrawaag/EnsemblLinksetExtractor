@@ -231,7 +231,9 @@ public class VoidCreator {
                 model.createLiteral("A linkset which links Ensembl with "+dataSourceName+ " for the species " + speciesName,"en"));
         String object = identifiersOrg.get(dataSource);
 		specificResource.addProperty(Void.objectsTarget, model.createResource(object));
-        specificResource.addLiteral(Void.triples, size);
+        if (size > 0){
+            specificResource.addLiteral(Void.triples, size);
+        }
         
         //Subset back to the species linkset and indirectly the rest
         Resource speciesLinkset = createSpeciesLinkset(species);
