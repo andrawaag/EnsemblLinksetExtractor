@@ -292,7 +292,6 @@ public class VoidCreator {
 		identifiersOrg.put("http://dbName#Leproma", "http://identifiers.org/myco.lepra/");
 		identifiersOrg.put("http://dbName#MEROPS", "http://identifiers.org/merops/");
 		identifiersOrg.put("http://dbName#MGI", "http://identifiers.org/mgd/");
-		identifiersOrg.put("http://dbName#MGI", "http://identifiers.org/mgi/");
 		identifiersOrg.put("http://dbName#MGI_transcript_name", "http://identifiers.org/mgi/");
 		identifiersOrg.put("http://dbName#MIM", "http://identifiers.org/omim/");
 		identifiersOrg.put("http://dbName#MIM_GENE", "http://identifiers.org/omim/");
