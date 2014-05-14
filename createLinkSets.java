@@ -24,15 +24,15 @@ public class createLinkSets {
 		while (humanDataSourceResultSet.hasNext()) {		
 			QuerySolution dataSolution = humanDataSourceResultSet.next();
 			String dataSource = dataSolution.get("dbName").toString();	
-            Model linkSetModel = basicCalls.getEnsemblLinkSets(species, dataSource);
+            		Model linkSetModel = basicCalls.getEnsemblLinkSets(species, dataSource);
 			if (linkSetModel.size()>0) {
-                Resource linksetVoid = voidCreator.createSpecificVoid(species, dataSource, linkSetModel.size());
-                Resource linkset = linkSetModel.createResource(":linkset");
-                linkset.addProperty(Void.inDataset, linksetVoid);
+                		Resource linksetVoid = voidCreator.createSpecificVoid(species, dataSource, linkSetModel.size());
+                		Resource linkset = linkSetModel.createResource(":linkset");
+                		linkset.addProperty(Void.inDataset, linksetVoid);
 				FileOutputStream fout;
 				fout = new FileOutputStream("/tmp/"+species+"_ensembl_"+URLEncoder.encode(dataSource.split("#")[1]+"LinkSets.ttl", "UTF-8"));
 				linkSetModel.write(fout, "TURTLE");
-                fout.close();
+                		fout.close();
 			}	
 		}
 	}/**/
@@ -61,19 +61,19 @@ public class createLinkSets {
     	// Should be only mentioned in the main class
         voidCreator.createGeneralVoid("71", new GregorianCalendar(2013, 4, 10));
         voidCreator.createSpecies("homo_sapiens_core_71_37", new GregorianCalendar(2013, 3, 27));
-		voidCreator.createSpecies("rattus_norvegicus_core_71_5", new GregorianCalendar(2013, 3, 27));
-		voidCreator.createSpecies("mus_musculus_core_71_38", new GregorianCalendar(2013, 3, 27));
-		voidCreator.createSpecies("canis_familiaris_core_71_31", new GregorianCalendar(2013, 3, 27));
-		voidCreator.createSpecies("bos_taurus_core_71_31", new GregorianCalendar(2013, 3, 27));
-		voidCreator.createSpecies("caenorhabditis_elegans_core_71_235", new GregorianCalendar(2013, 3, 27));
-		voidCreator.createSpecies("canis_familiaris_core_71_31", new GregorianCalendar(2013, 3, 27));
-		voidCreator.createSpecies("danio_rerio_core_71_9", new GregorianCalendar(2013, 3, 27));
-		voidCreator.createSpecies("drosophila_melanogaster_core_71_546", new GregorianCalendar(2013, 3, 27));
-		voidCreator.createSpecies("equus_caballus_core_71_2", new GregorianCalendar(2013, 3, 27));
-		voidCreator.createSpecies("gallus_gallus_core_71_4", new GregorianCalendar(2013, 3, 27));
-		voidCreator.createSpecies("pan_troglodytes_core_71_214", new GregorianCalendar(2013, 3, 27));
-		voidCreator.createSpecies("saccharomyces_cerevisiae_core_71_4", new GregorianCalendar(2013, 3, 27));
-		voidCreator.createSpecies("homo_sapiens_funcgen_71_37", new GregorianCalendar(2013, 3, 27));
+	voidCreator.createSpecies("rattus_norvegicus_core_71_5", new GregorianCalendar(2013, 3, 27));
+	voidCreator.createSpecies("mus_musculus_core_71_38", new GregorianCalendar(2013, 3, 27));
+	voidCreator.createSpecies("canis_familiaris_core_71_31", new GregorianCalendar(2013, 3, 27));
+	voidCreator.createSpecies("bos_taurus_core_71_31", new GregorianCalendar(2013, 3, 27));
+	voidCreator.createSpecies("caenorhabditis_elegans_core_71_235", new GregorianCalendar(2013, 3, 27));
+	voidCreator.createSpecies("canis_familiaris_core_71_31", new GregorianCalendar(2013, 3, 27));
+	voidCreator.createSpecies("danio_rerio_core_71_9", new GregorianCalendar(2013, 3, 27));
+	voidCreator.createSpecies("drosophila_melanogaster_core_71_546", new GregorianCalendar(2013, 3, 27));
+	voidCreator.createSpecies("equus_caballus_core_71_2", new GregorianCalendar(2013, 3, 27));
+	voidCreator.createSpecies("gallus_gallus_core_71_4", new GregorianCalendar(2013, 3, 27));
+	voidCreator.createSpecies("pan_troglodytes_core_71_214", new GregorianCalendar(2013, 3, 27));
+	voidCreator.createSpecies("saccharomyces_cerevisiae_core_71_4", new GregorianCalendar(2013, 3, 27));
+	voidCreator.createSpecies("homo_sapiens_funcgen_71_37", new GregorianCalendar(2013, 3, 27));
     }
 
 	public static void main(String[] args) throws UnsupportedEncodingException, IOException {
